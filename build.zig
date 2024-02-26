@@ -168,10 +168,10 @@ fn buildTest(b: *std.Build, info: BuildInfo) void {
         .optimize = info.lib.optimize,
         .target = info.lib.target,
     });
-    test_exe.addIncludePath("include");
-    test_exe.addIncludePath("benchmark");
-    test_exe.addIncludePath("test/_include");
-    test_exe.addCSourceFile(info.path, cxxFlags);
+    test_exe.addIncludePath(.{ .path = "include" });
+    test_exe.addIncludePath(.{ .path = "benchmark" });
+    test_exe.addIncludePath(.{ .path = "test/_include" });
+    test_exe.addCSourceFile(.{ .file = .{ .path = info.path }, .flags = cxxFlags });
     test_exe.linkLibCpp();
     b.installArtifact(test_exe);
 
@@ -194,7 +194,7 @@ const cxxFlags: []const []const u8 = &.{
 };
 
 const BuildInfo = struct {
-    lib: *std.Build.CompileStep,
+    lib: *std.Build.Step.Compile,
     path: []const u8,
 
     fn filename(self: BuildInfo) []const u8 {
